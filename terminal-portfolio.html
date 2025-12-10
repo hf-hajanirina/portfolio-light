@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>$ Harimisa Florent ~ Portfolio Terminal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -45,7 +48,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
+            background-image:
                 linear-gradient(var(--border-color) 1px, transparent 1px),
                 linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
             background-size: 50px 50px;
@@ -55,8 +58,13 @@
         }
 
         @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(50px, 50px);
+            }
         }
 
         /* Noise texture overlay */
@@ -107,8 +115,13 @@
         }
 
         @keyframes borderGlow {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 200% 0%; }
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 200% 0%;
+            }
         }
 
         .ascii-portrait {
@@ -160,8 +173,13 @@
         }
 
         @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
         }
 
         .ascii-art {
@@ -203,8 +221,17 @@
         }
 
         @keyframes blink {
-            0%, 50%, 100% { opacity: 1; }
-            25%, 75% { opacity: 0.3; }
+
+            0%,
+            50%,
+            100% {
+                opacity: 1;
+            }
+
+            25%,
+            75% {
+                opacity: 0.3;
+            }
         }
 
         h1 {
@@ -223,6 +250,7 @@
                 opacity: 0;
                 transform: translateX(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -363,6 +391,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -628,6 +657,279 @@
             color: var(--accent-cyan);
         }
 
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px var(--glow-cyan);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Skill Progress Bars */
+        .skill-level {
+            margin-top: 1rem;
+        }
+
+        .skill-item {
+            margin-bottom: 1rem;
+        }
+
+        .skill-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .skill-name {
+            color: var(--text-primary);
+        }
+
+        .skill-percentage {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .skill-bar {
+            height: 8px;
+            background: var(--bg-darker);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 10px;
+            transition: width 1.5s ease-out;
+            position: relative;
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        .skill-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px var(--glow-cyan);
+            transform: scale(1.05);
+        }
+
+        .theme-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-icon.active {
+            transform: rotate(360deg);
+        }
+
+        /* Light Theme Variables */
+        body.light-theme {
+            --bg-dark: #f5f7fa;
+            --bg-darker: #ffffff;
+            --terminal-bg: #ffffff;
+            --text-primary: #1a1d29;
+            --text-secondary: #5c6370;
+            --border-color: #e1e4e8;
+            --glow-cyan: rgba(57, 208, 216, 0.2);
+            --glow-green: rgba(126, 231, 135, 0.2);
+        }
+
+        /* Command Autocomplete */
+        .command-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 10;
+        }
+
+        .command-suggestions.active {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .suggestion-item:hover,
+        .suggestion-item.selected {
+            background: var(--bg-darker);
+            color: var(--accent-cyan);
+        }
+
+        .suggestion-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Education/Certifications */
+        .education-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .education-card {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .education-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-green), var(--accent-cyan));
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .education-card:hover {
+            border-color: var(--accent-green);
+            transform: translateX(8px);
+            box-shadow: 0 4px 20px var(--glow-green);
+        }
+
+        .education-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .education-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .education-title {
+            color: var(--accent-green);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .education-institution {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .education-date {
+            color: var(--accent-orange);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
         /* Contact Section */
         .contact-grid {
             display: grid;
@@ -714,18 +1016,23 @@
             0% {
                 transform: translate(0);
             }
+
             20% {
                 transform: translate(-2px, 2px);
             }
+
             40% {
                 transform: translate(-2px, -2px);
             }
+
             60% {
                 transform: translate(2px, 2px);
             }
+
             80% {
                 transform: translate(2px, -2px);
             }
+
             100% {
                 transform: translate(0);
             }
@@ -736,9 +1043,15 @@
         }
     </style>
 </head>
+
 <body>
     <div class="bg-grid"></div>
     <div class="noise-overlay"></div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" id="themeToggle">
+        <span class="theme-icon" id="themeIcon">🌙</span>
+    </div>
 
     <div class="container">
         <!-- Terminal Header with Photo -->
@@ -755,37 +1068,59 @@
                         @@@@@####@@####@@@@@
                         @@@@@@@@@@@@@@@@@@@@
                         @@@@@@@@@@@@@@@@@@@@
-                        @@@@@@@@@@@@@@@@@@@@ 
+                        @@@@@@@@@@@@@@@@@@@@
                         @@@##@@@@@@@@@@##@@@
                         @@@@@@##@@@@##@@@@@@
-                        @@@@@@@@@@@@@@@@@@@@ 
+                        @@@@@@@@@@@@@@@@@@@@
                         @@@@@@@@@@@@@@@@@@@@
                     </div>
                 </div>
             </div>
             <div class="header-content">
                 <div class="terminal-prompt">
-                    <span>user@portfolio:~$</span>
+                    <span>florent@portfolio:~$</span>
                     <span class="prompt-symbol">▊</span>
                 </div>
                 <h1 class="glitch">Harimisa Florent Hajanirina</h1>
-                <div class="role">Développeur Fullstack JS • PHP/Symfony • WordPress Expert</div>
+                <div class="role">Développeur Fullstack JS • PHP/Symfony • WordPress</div>
                 <p class="bio-short">
-                    6+ ans d'expérience en développement web fullstack. Spécialisé dans les écosystèmes JavaScript modernes 
-                    (Angular, React, Node.js) et expert WordPress. Passionné par l'architecture microservices et le DevOps.
+                    Développeur fullstack indépendant, fort de 6+ ans d’expérience, je maîtrise Angular, React, Node.js
+                    et WordPress pour accompagner vos projets web de la conception à la mise en production.
                 </p>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number" data-target="7">0</span>
+                <div class="stat-label">Ans d'expérience</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" data-target="10">0</span>
+                <div class="stat-label">Projets réalisés</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" data-target="20">0</span>
+                <div class="stat-label">Technologies maîtrisées</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" data-target="100">0</span>
+                <div class="stat-label">% Satisfaction client</div>
             </div>
         </div>
 
         <!-- Command Input -->
         <div class="command-section">
             <div class="command-help">
-                Tapez <span>help</span> pour voir les commandes disponibles, 
-                ou <span>about</span>, <span>skills</span>, <span>projects</span>, <span>contact</span>
+                Tapez <span>help</span> pour voir les commandes disponibles,
+                ou <span>about</span>, <span>skills</span>, <span>projects</span>, <span>experience</span>,
+                <span>education</span>, <span>contact</span>
             </div>
-            <div class="command-input-wrapper">
+            <div class="command-input-wrapper" style="position: relative;">
                 <span class="command-prompt-symbol">$</span>
-                <input type="text" id="commandInput" placeholder="Tapez une commande..." />
+                <input type="text" id="commandInput" placeholder="Tapez une commande..." autocomplete="off" />
+                <div class="command-suggestions" id="commandSuggestions"></div>
             </div>
         </div>
 
@@ -795,6 +1130,7 @@
             <button class="nav-tab" data-section="skills">Compétences</button>
             <button class="nav-tab" data-section="projects">Projets</button>
             <button class="nav-tab" data-section="experience">Expériences</button>
+            <button class="nav-tab" data-section="education">Formation</button>
             <button class="nav-tab" data-section="contact">Contact</button>
         </div>
 
@@ -805,19 +1141,21 @@
                 <div class="skill-category">
                     <h3>💼 Profil</h3>
                     <p style="color: var(--text-secondary); line-height: 1.8;">
-                        Développeur Full-Stack passionné avec plus de 6 ans d'expérience dans la création d'applications 
-                        web complexes. Expert en JavaScript (Angular, React, Node.js) et maîtrisant également PHP/Symfony. 
+                        Développeur Full-Stack passionné avec plus de 6 ans d'expérience dans la création d'applications
+                        web complexes. Expert en JavaScript (Angular, React, Node.js) et maîtrisant également
+                        PHP/Symfony.
                         J'interviens sur l'ensemble du cycle de vie logiciel avec une approche DevOps.
                     </p>
                 </div>
                 <div class="skill-category">
                     <h3>🎯 Spécialités</h3>
                     <div class="skill-tags">
+                        <span class="skill-tag">Développement Web</span>
                         <span class="skill-tag">Architecture Microservices</span>
                         <span class="skill-tag">REST & GraphQL</span>
                         <span class="skill-tag">CI/CD</span>
                         <span class="skill-tag">Tests Automatisés</span>
-                        <span class="skill-tag">WordPress Expert</span>
+                        <span class="skill-tag">WordPress</span>
                     </div>
                 </div>
                 <div class="skill-category">
@@ -835,6 +1173,136 @@
         <!-- Skills Section -->
         <div class="content-section" id="skills">
             <h2 class="section-title">Compétences</h2>
+
+            <!-- Primary Skills with Progress Bars -->
+            <div class="skills-grid" style="margin-bottom: 3rem;">
+                <div class="skill-category">
+                    <h3>JavaScript & Frameworks</h3>
+                    <div class="skill-level">
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">React / Next.js</span>
+                                <span class="skill-percentage">95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="95"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">Angular</span>
+                                <span class="skill-percentage">90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">Node.js / NestJS</span>
+                                <span class="skill-percentage">92%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="92"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">TypeScript</span>
+                                <span class="skill-percentage">93%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="93"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Backend & Databases</h3>
+                    <div class="skill-level">
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">PHP / Symfony</span>
+                                <span class="skill-percentage">85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">REST API / GraphQL</span>
+                                <span class="skill-percentage">90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">MySQL / PostgreSQL</span>
+                                <span class="skill-percentage">88%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="88"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">MongoDB / Redis</span>
+                                <span class="skill-percentage">85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="85"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>DevOps & Testing</h3>
+                    <div class="skill-level">
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">Docker / CI/CD</span>
+                                <span class="skill-percentage">87%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="87"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">Jest / WebdriverIO</span>
+                                <span class="skill-percentage">90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">Git / GitHub Actions</span>
+                                <span class="skill-percentage">92%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="92"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-item-header">
+                                <span class="skill-name">WordPress</span>
+                                <span class="skill-percentage">88%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="88"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technology Tags -->
+            <h3 style="color: var(--accent-purple); margin-bottom: 1.5rem; font-size: 1.3rem;">Technologies</h3>
             <div class="skills-grid">
                 <div class="skill-category">
                     <h3>JavaScript & Frameworks</h3>
@@ -877,7 +1345,6 @@
                         <span class="skill-tag">GitLab CI</span>
                         <span class="skill-tag">GitHub Actions</span>
                         <span class="skill-tag">Azure DevOps</span>
-                        <span class="skill-tag">GCP</span>
                         <span class="skill-tag">Ansible</span>
                     </div>
                 </div>
@@ -887,6 +1354,8 @@
                         <span class="skill-tag">Jest</span>
                         <span class="skill-tag">WebdriverIO</span>
                         <span class="skill-tag">Postman</span>
+                        <span class="skill-tag">Sélenium</span>
+                        <span class="skill-tag">Appium</span>
                         <span class="skill-tag">SonarQube</span>
                     </div>
                 </div>
@@ -898,6 +1367,7 @@
                         <span class="skill-tag">WordPress</span>
                         <span class="skill-tag">Java</span>
                         <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Salesforce</span>
                     </div>
                 </div>
             </div>
@@ -915,7 +1385,7 @@
                         </div>
                     </div>
                     <p class="project-description">
-                        Site personnel moderne et responsive avec animations fluides, hébergé sur Vercel 
+                        Site personnel moderne et responsive avec animations fluides, hébergé sur Vercel
                         avec pipeline CI/CD automatisé via GitHub Actions.
                     </p>
                     <div class="project-tech">
@@ -938,7 +1408,7 @@
                         </div>
                     </div>
                     <p class="project-description">
-                        Développement de blocs Gutenberg personnalisés (contact, listes, highlighted text) 
+                        Développement de blocs Gutenberg personnalisés (contact, listes, highlighted text)
                         alignés avec le Design System et intégration Figma.
                     </p>
                     <div class="project-tech">
@@ -960,7 +1430,7 @@
                         </div>
                     </div>
                     <p class="project-description">
-                        Architecture microservices Node.js/React pour tests automatisés d'interfaces web et mobiles. 
+                        Architecture microservices Node.js/React pour tests automatisés d'interfaces web et mobiles.
                         Intégration Redis + Bull pour scheduling, migration WebdriverIO v7.
                     </p>
                     <div class="project-tech">
@@ -1020,6 +1490,31 @@
             </div>
         </div>
 
+        <!-- Education Section -->
+        <div class="content-section" id="education">
+            <h2 class="section-title">Formation & Certifications</h2>
+            <div class="education-grid">
+                <div class="education-card">
+                    <span class="education-icon">🎓</span>
+                    <div class="education-title">Master Pro Informatique</div>
+                    <div class="education-institution">École Nationale d'Informatique</div>
+                    <div class="education-date">2018 - 2019</div>
+                </div>
+                <div class="education-card">
+                    <span class="education-icon">📜</span>
+                    <div class="education-title">Licence en Informatique</div>
+                    <div class="education-institution">École Nationale d'Informatique</div>
+                    <div class="education-date">2015 - 2016</div>
+                </div>
+                <div class="education-card">
+                    <span class="education-icon">🏆</span>
+                    <div class="education-title">Certification JavaScript</div>
+                    <div class="education-institution">Formation Continue</div>
+                    <div class="education-date">2024</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Contact Section -->
         <div class="content-section" id="contact">
             <h2 class="section-title">Contact</h2>
@@ -1028,7 +1523,7 @@
                     <span class="contact-icon">📧</span>
                     <div class="contact-label">Email</div>
                     <div class="contact-value">
-                        <a href="mailto:harimisaflorentmi@gmail.com">harimisaflorentmi@gmail.com</a>
+                        <a href="mailto:harimisaflorent.mi@gmail.com">harimisaflorent.mi@gmail.com</a>
                     </div>
                 </div>
 
@@ -1076,7 +1571,7 @@
         </div>
 
         <footer>
-            <p>© 2025 Harimisa Florent HAJANIRINA • Développé avec ❤️ et ☕</p>
+            <p>© 2025 Harimisa Florent HAJANIRINA • </p>
             <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 0.5rem;">
                 Built with passion using modern web technologies
             </p>
@@ -1084,6 +1579,67 @@
     </div>
 
     <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        let isDark = true;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+            themeIcon.textContent = '☀️';
+            isDark = false;
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            isDark = !isDark;
+            themeIcon.textContent = isDark ? '🌙' : '☀️';
+            themeIcon.classList.add('active');
+            setTimeout(() => themeIcon.classList.remove('active'), 300);
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Animated Stats Counter
+        const animateCounter = (element) => {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    element.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = target;
+                }
+            };
+
+            updateCounter();
+        };
+
+        // Animate skill bars
+        const animateSkillBars = () => {
+            document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width + '%';
+                }, 100);
+            });
+        };
+
+        // Trigger animations on page load
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.stat-number').forEach(stat => {
+                animateCounter(stat);
+            });
+            animateSkillBars();
+        });
+
         // Navigation
         const navTabs = document.querySelectorAll('.nav-tab');
         const contentSections = document.querySelectorAll('.content-section');
@@ -1091,7 +1647,7 @@
         navTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const sectionId = tab.getAttribute('data-section');
-                
+
                 // Update active tab
                 navTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
@@ -1103,48 +1659,127 @@
                         section.classList.add('active');
                     }
                 });
+
+                // Re-animate skill bars when skills section is shown
+                if (sectionId === 'skills') {
+                    animateSkillBars();
+                }
             });
         });
 
-        // Command Input
+        // Command Input with Autocomplete
         const commandInput = document.getElementById('commandInput');
+        const commandSuggestions = document.getElementById('commandSuggestions');
+
+        const commandsList = [
+            { cmd: 'help', desc: 'Afficher toutes les commandes' },
+            { cmd: 'about', desc: 'Section À propos' },
+            { cmd: 'skills', desc: 'Voir les compétences' },
+            { cmd: 'projects', desc: 'Voir les projets' },
+            { cmd: 'experience', desc: 'Voir les expériences' },
+            { cmd: 'education', desc: 'Voir la formation' },
+            { cmd: 'contact', desc: 'Voir les coordonnées' },
+            { cmd: 'clear', desc: 'Effacer le champ' },
+            { cmd: 'email', desc: 'Ouvrir le client email' },
+            { cmd: 'github', desc: 'Ouvrir GitHub' },
+            { cmd: 'linkedin', desc: 'Ouvrir LinkedIn' },
+            { cmd: 'theme', desc: 'Changer de thème' }
+        ];
+
         const commands = {
             'help': () => {
-                alert('Commandes disponibles:\n\n' +
-                      'about - Afficher la section À propos\n' +
-                      'skills - Afficher les compétences\n' +
-                      'projects - Afficher les projets\n' +
-                      'experience - Afficher les expériences\n' +
-                      'contact - Afficher les coordonnées\n' +
-                      'clear - Effacer le terminal\n' +
-                      'email - Ouvrir le client email');
+                const helpText = commandsList.map(c => `${c.cmd.padEnd(12)} - ${c.desc}`).join('\n');
+                alert('Commandes disponibles:\n\n' + helpText);
             },
-            'about': () => {
-                document.querySelector('[data-section="about"]').click();
-            },
-            'skills': () => {
-                document.querySelector('[data-section="skills"]').click();
-            },
-            'projects': () => {
-                document.querySelector('[data-section="projects"]').click();
-            },
-            'experience': () => {
-                document.querySelector('[data-section="experience"]').click();
-            },
-            'contact': () => {
-                document.querySelector('[data-section="contact"]').click();
-            },
-            'clear': () => {
-                commandInput.value = '';
-            },
-            'email': () => {
-                window.location.href = 'mailto:harimisaflorentmi@gmail.com';
-            }
+            'about': () => document.querySelector('[data-section="about"]').click(),
+            'skills': () => document.querySelector('[data-section="skills"]').click(),
+            'projects': () => document.querySelector('[data-section="projects"]').click(),
+            'experience': () => document.querySelector('[data-section="experience"]').click(),
+            'education': () => document.querySelector('[data-section="education"]').click(),
+            'contact': () => document.querySelector('[data-section="contact"]').click(),
+            'clear': () => commandInput.value = '',
+            'email': () => window.location.href = 'mailto:harimisaflorent.mi@gmail.com',
+            'github': () => window.open('https://github.com/hf-hajanirina', '_blank'),
+            'linkedin': () => window.open('https://www.linkedin.com/in/harimisa-florent/', '_blank'),
+            'theme': () => themeToggle.click()
         };
 
+        let selectedSuggestionIndex = -1;
+
+        // Show autocomplete suggestions
+        commandInput.addEventListener('input', (e) => {
+            const value = e.target.value.toLowerCase().trim();
+            selectedSuggestionIndex = -1;
+
+            if (value.length === 0) {
+                commandSuggestions.classList.remove('active');
+                commandSuggestions.innerHTML = '';
+                return;
+            }
+
+            const matches = commandsList.filter(c => c.cmd.toLowerCase().startsWith(value));
+
+            if (matches.length > 0) {
+                commandSuggestions.innerHTML = matches.map((c, index) =>
+                    `<div class="suggestion-item" data-index="${index}" data-cmd="${c.cmd}">
+                        <span>${c.cmd}</span>
+                        <span class="suggestion-desc">${c.desc}</span>
+                    </div>`
+                ).join('');
+                commandSuggestions.classList.add('active');
+
+                // Add click handlers to suggestions
+                document.querySelectorAll('.suggestion-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        commandInput.value = item.getAttribute('data-cmd');
+                        commandSuggestions.classList.remove('active');
+                        commandInput.focus();
+                    });
+                });
+            } else {
+                commandSuggestions.classList.remove('active');
+                commandSuggestions.innerHTML = '';
+            }
+        });
+
+        // Handle keyboard navigation in suggestions
+        commandInput.addEventListener('keydown', (e) => {
+            const suggestions = document.querySelectorAll('.suggestion-item');
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (suggestions.length > 0) {
+                    selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestions.length - 1);
+                    updateSelectedSuggestion(suggestions);
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (suggestions.length > 0) {
+                    selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, 0);
+                    updateSelectedSuggestion(suggestions);
+                }
+            } else if (e.key === 'Tab' && suggestions.length > 0) {
+                e.preventDefault();
+                const selected = suggestions[Math.max(0, selectedSuggestionIndex)];
+                commandInput.value = selected.getAttribute('data-cmd');
+                commandSuggestions.classList.remove('active');
+            } else if (e.key === 'Escape') {
+                commandSuggestions.classList.remove('active');
+            }
+        });
+
+        function updateSelectedSuggestion(suggestions) {
+            suggestions.forEach((s, i) => {
+                s.classList.toggle('selected', i === selectedSuggestionIndex);
+            });
+        }
+
+        // Execute command on Enter
         commandInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 const command = commandInput.value.trim().toLowerCase();
+                commandSuggestions.classList.remove('active');
+
                 if (commands[command]) {
                     commands[command]();
                 } else if (command) {
@@ -1154,14 +1789,21 @@
             }
         });
 
+        // Close suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!commandInput.contains(e.target) && !commandSuggestions.contains(e.target)) {
+                commandSuggestions.classList.remove('active');
+            }
+        });
+
         // Easter egg: Konami code
         let konamiCode = [];
         const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        
+
         document.addEventListener('keydown', (e) => {
             konamiCode.push(e.key);
             konamiCode = konamiCode.slice(-10);
-            
+
             if (konamiCode.join(',') === konamiSequence.join(',')) {
                 document.body.style.animation = 'glitch 0.3s infinite';
                 setTimeout(() => {
@@ -1194,4 +1836,5 @@
         });
     </script>
 </body>
+
 </html>
