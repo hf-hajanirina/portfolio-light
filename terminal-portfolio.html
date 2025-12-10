@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$ Harimisa Florent ~ Portfolio Terminal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --terminal-bg: #0f1419;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent-cyan: #39d0d8;
+            --accent-green: #7ee787;
+            --accent-purple: #bc8cff;
+            --accent-orange: #ff9e64;
+            --accent-red: #f97583;
+            --border-color: #21262d;
+            --glow-cyan: rgba(57, 208, 216, 0.3);
+            --glow-green: rgba(126, 231, 135, 0.3);
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Space Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated background grid */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.1;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Noise texture overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            z-index: 100;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Terminal Header */
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-cyan));
+            background-size: 200% 100%;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        .ascii-portrait {
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .portrait-wrapper {
+            width: 180px;
+            height: 180px;
+            border: 2px solid var(--accent-cyan);
+            border-radius: 4px;
+            padding: 8px;
+            background: var(--bg-darker);
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px var(--glow-cyan);
+        }
+
+        .portrait-wrapper:hover {
+            transform: scale(1.05) rotate(1deg);
+            box-shadow: 0 0 30px var(--glow-cyan), inset 0 0 20px rgba(57, 208, 216, 0.1);
+        }
+
+        .portrait-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--bg-darker);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portrait-placeholder::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .ascii-art {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 3px;
+            line-height: 3px;
+            color: var(--accent-green);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            overflow: hidden;
+            white-space: pre;
+            letter-spacing: -1px;
+        }
+
+        .portrait-wrapper:hover .ascii-art {
+            opacity: 0.9;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        .terminal-prompt {
+            color: var(--accent-green);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .prompt-symbol {
+            color: var(--accent-cyan);
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .role {
+            font-size: 1.1rem;
+            color: var(--accent-orange);
+            margin-bottom: 1rem;
+            animation: slideIn 0.8s ease-out 0.2s both;
+        }
+
+        .bio-short {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            max-width: 700px;
+            animation: slideIn 0.8s ease-out 0.4s both;
+        }
+
+        /* Command Input Section */
+        .command-section {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .command-help {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .command-help span {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .command-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-darker);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .command-input-wrapper:focus-within {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        .command-prompt-symbol {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        #commandInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-cyan);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-darker);
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: var(--bg-darker);
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px var(--glow-cyan);
+        }
+
+        .nav-tab.active::before {
+            transform: scaleX(1);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--accent-cyan);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title::before {
+            content: '//';
+            color: var(--accent-purple);
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .skill-category {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 20px var(--glow-cyan);
+        }
+
+        .skill-category h3 {
+            color: var(--accent-green);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-category h3::before {
+            content: '◆';
+            color: var(--accent-cyan);
+            font-size: 0.8rem;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: var(--bg-darker);
+            color: var(--text-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-darker);
+            border-color: var(--accent-cyan);
+            transform: scale(1.05);
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateX(8px);
+            box-shadow: 0 8px 30px var(--glow-cyan);
+        }
+
+        .project-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .project-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .project-title {
+            flex: 1;
+        }
+
+        .project-title h3 {
+            color: var(--accent-green);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tech-tag {
+            background: var(--bg-darker);
+            color: var(--accent-orange);
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-link {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            color: var(--accent-purple);
+            transform: translateX(4px);
+        }
+
+        /* Experience Timeline */
+        .experience-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .experience-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+        }
+
+        .experience-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 2rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            border: 2px solid var(--bg-dark);
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        .experience-item:hover {
+            border-color: var(--accent-cyan);
+            transform: translateX(8px);
+            box-shadow: 0 4px 20px var(--glow-cyan);
+        }
+
+        .experience-date {
+            color: var(--accent-orange);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .experience-role {
+            color: var(--accent-green);
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .experience-company {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .experience-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .experience-description li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .experience-description li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+        }
+
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .contact-card {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px var(--glow-cyan);
+        }
+
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .contact-label {
+            color: var(--accent-green);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-value {
+            color: var(--text-secondary);
+        }
+
+        .contact-value a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-value a:hover {
+            color: var(--accent-purple);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .terminal-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .portrait-wrapper {
+                width: 150px;
+                height: 150px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .skills-grid,
+            .projects-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glitch effect on hover */
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(-2px, 2px);
+            }
+            40% {
+                transform: translate(-2px, -2px);
+            }
+            60% {
+                transform: translate(2px, 2px);
+            }
+            80% {
+                transform: translate(2px, -2px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        .glitch:hover {
+            animation: glitch 0.3s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="noise-overlay"></div>
+
+    <div class="container">
+        <!-- Terminal Header with Photo -->
+        <div class="terminal-header">
+            <div class="ascii-portrait">
+                <div class="portrait-wrapper">
+                    <div class="portrait-placeholder">
+                        HF
+                    </div>
+                    <div class="ascii-art">
+                        @@@@@@@@@@@@@@@@@@@@
+                        @@@@@@@@@@@@@@@@@@@@
+                        @@@@@####@@####@@@@@
+                        @@@@@####@@####@@@@@
+                        @@@@@@@@@@@@@@@@@@@@
+                        @@@@@@@@@@@@@@@@@@@@
+                        @@@@@@@@@@@@@@@@@@@@ 
+                        @@@##@@@@@@@@@@##@@@
+                        @@@@@@##@@@@##@@@@@@
+                        @@@@@@@@@@@@@@@@@@@@ 
+                        @@@@@@@@@@@@@@@@@@@@
+                    </div>
+                </div>
+            </div>
+            <div class="header-content">
+                <div class="terminal-prompt">
+                    <span>user@portfolio:~$</span>
+                    <span class="prompt-symbol">▊</span>
+                </div>
+                <h1 class="glitch">Harimisa Florent Hajanirina</h1>
+                <div class="role">Développeur Fullstack JS • PHP/Symfony • WordPress Expert</div>
+                <p class="bio-short">
+                    6+ ans d'expérience en développement web fullstack. Spécialisé dans les écosystèmes JavaScript modernes 
+                    (Angular, React, Node.js) et expert WordPress. Passionné par l'architecture microservices et le DevOps.
+                </p>
+            </div>
+        </div>
+
+        <!-- Command Input -->
+        <div class="command-section">
+            <div class="command-help">
+                Tapez <span>help</span> pour voir les commandes disponibles, 
+                ou <span>about</span>, <span>skills</span>, <span>projects</span>, <span>contact</span>
+            </div>
+            <div class="command-input-wrapper">
+                <span class="command-prompt-symbol">$</span>
+                <input type="text" id="commandInput" placeholder="Tapez une commande..." />
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-section="about">À propos</button>
+            <button class="nav-tab" data-section="skills">Compétences</button>
+            <button class="nav-tab" data-section="projects">Projets</button>
+            <button class="nav-tab" data-section="experience">Expériences</button>
+            <button class="nav-tab" data-section="contact">Contact</button>
+        </div>
+
+        <!-- About Section -->
+        <div class="content-section active" id="about">
+            <h2 class="section-title">À propos</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>💼 Profil</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.8;">
+                        Développeur Full-Stack passionné avec plus de 6 ans d'expérience dans la création d'applications 
+                        web complexes. Expert en JavaScript (Angular, React, Node.js) et maîtrisant également PHP/Symfony. 
+                        J'interviens sur l'ensemble du cycle de vie logiciel avec une approche DevOps.
+                    </p>
+                </div>
+                <div class="skill-category">
+                    <h3>🎯 Spécialités</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Architecture Microservices</span>
+                        <span class="skill-tag">REST & GraphQL</span>
+                        <span class="skill-tag">CI/CD</span>
+                        <span class="skill-tag">Tests Automatisés</span>
+                        <span class="skill-tag">WordPress Expert</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>📍 Disponibilité</h3>
+                    <p style="color: var(--accent-green); line-height: 1.8;">
+                        ✓ Missions Fullstack React/Next.js, Angular, Node.js<br>
+                        ✓ Développement PHP/Symfony<br>
+                        ✓ Intégrations WordPress<br>
+                        ✓ Remote & sur site (Île-de-France)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="content-section" id="skills">
+            <h2 class="section-title">Compétences</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>JavaScript & Frameworks</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">TypeScript</span>
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Angular</span>
+                        <span class="skill-tag">Next.js</span>
+                        <span class="skill-tag">Redux</span>
+                        <span class="skill-tag">RxJS</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Backend & API</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">NestJS</span>
+                        <span class="skill-tag">Express.js</span>
+                        <span class="skill-tag">REST API</span>
+                        <span class="skill-tag">GraphQL</span>
+                        <span class="skill-tag">Apollo</span>
+                        <span class="skill-tag">TypeORM</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Bases de données</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">MongoDB</span>
+                        <span class="skill-tag">Redis</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>DevOps & Cloud</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">Jenkins</span>
+                        <span class="skill-tag">GitLab CI</span>
+                        <span class="skill-tag">GitHub Actions</span>
+                        <span class="skill-tag">Azure DevOps</span>
+                        <span class="skill-tag">GCP</span>
+                        <span class="skill-tag">Ansible</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Testing & Quality</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Jest</span>
+                        <span class="skill-tag">WebdriverIO</span>
+                        <span class="skill-tag">Postman</span>
+                        <span class="skill-tag">SonarQube</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Autres Technologies</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">PHP</span>
+                        <span class="skill-tag">Symfony</span>
+                        <span class="skill-tag">WordPress</span>
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Python</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="content-section" id="projects">
+            <h2 class="section-title">Projets</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-icon">⚡</span>
+                        <div class="project-title">
+                            <h3>Portfolio Next.js + Tailwind</h3>
+                        </div>
+                    </div>
+                    <p class="project-description">
+                        Site personnel moderne et responsive avec animations fluides, hébergé sur Vercel 
+                        avec pipeline CI/CD automatisé via GitHub Actions.
+                    </p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Next.js</span>
+                        <span class="tech-tag">Tailwind CSS</span>
+                        <span class="tech-tag">Framer Motion</span>
+                        <span class="tech-tag">Vercel</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/hf-hajanirina" class="project-link">→ Code</a>
+                        <a href="https://portfolio-phi-ashy-37.vercel.app" class="project-link">→ Live</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-icon">🔧</span>
+                        <div class="project-title">
+                            <h3>WordPress – Blocs Gutenberg Custom</h3>
+                        </div>
+                    </div>
+                    <p class="project-description">
+                        Développement de blocs Gutenberg personnalisés (contact, listes, highlighted text) 
+                        alignés avec le Design System et intégration Figma.
+                    </p>
+                    <div class="project-tech">
+                        <span class="tech-tag">WordPress</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">SCSS</span>
+                        <span class="tech-tag">Gutenberg API</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="project-link">→ Documentation</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-icon">🚀</span>
+                        <div class="project-title">
+                            <h3>Plateforme Tests Automatisés</h3>
+                        </div>
+                    </div>
+                    <p class="project-description">
+                        Architecture microservices Node.js/React pour tests automatisés d'interfaces web et mobiles. 
+                        Intégration Redis + Bull pour scheduling, migration WebdriverIO v7.
+                    </p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Redis</span>
+                        <span class="tech-tag">WebdriverIO</span>
+                        <span class="tech-tag">Docker</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="project-link">→ En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experience Section -->
+        <div class="content-section" id="experience">
+            <h2 class="section-title">Expériences</h2>
+            <div class="experience-timeline">
+                <div class="experience-item">
+                    <div class="experience-date">Juin 2023 – Juin 2024</div>
+                    <h3 class="experience-role">Développeur Angular / Node.js</h3>
+                    <div class="experience-company">FUJITSU France, Courbevoie</div>
+                    <ul class="experience-description">
+                        <li>Refonte complète UI/UX application de gestion station-service</li>
+                        <li>Internationalisation (i18n) avec composant édition multilingue</li>
+                        <li>Mise en place serveur nginx Windows + compilation microservices Node.js en .exe</li>
+                        <li>Tests unitaires Jest et E2E WebdriverIO</li>
+                    </ul>
+                </div>
+
+                <div class="experience-item">
+                    <div class="experience-date">Janvier 2019 – Mai 2023</div>
+                    <h3 class="experience-role">Développeur Full-Stack Node.js / React</h3>
+                    <div class="experience-company">ARKEUP, Paris</div>
+                    <ul class="experience-description">
+                        <li>Développement plateforme tests automatisés web/mobile (Node.js, React)</li>
+                        <li>Intégration microservices Python dans architecture existante</li>
+                        <li>Mise en place Redis + Bull Scheduler pour planification</li>
+                        <li>Migration WebdriverIO v5→v7, optimisation performances</li>
+                        <li>Authentification JWT avec refresh tokens</li>
+                        <li>CI/CD Docker, Ansible, Jenkins sur GCP</li>
+                    </ul>
+                </div>
+
+                <div class="experience-item">
+                    <div class="experience-date">Août 2018 – Décembre 2018</div>
+                    <h3 class="experience-role">Développeur Full-Stack Java / Angular</h3>
+                    <div class="experience-company">ARKEUP, Paris</div>
+                    <ul class="experience-description">
+                        <li>Application gestion documentaire Java Spring MVC + Angular</li>
+                        <li>APIs REST pour gestion et partage fichiers OwnCloud</li>
+                        <li>Interfaces utilisateur complètes (Login, Registration, File Management)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="content-section" id="contact">
+            <h2 class="section-title">Contact</h2>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <span class="contact-icon">📧</span>
+                    <div class="contact-label">Email</div>
+                    <div class="contact-value">
+                        <a href="mailto:harimisaflorentmi@gmail.com">harimisaflorentmi@gmail.com</a>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <span class="contact-icon">📱</span>
+                    <div class="contact-label">Téléphone</div>
+                    <div class="contact-value">
+                        <a href="tel:+33767587036">+33 7 67 58 70 36</a>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <span class="contact-icon">💼</span>
+                    <div class="contact-label">LinkedIn</div>
+                    <div class="contact-value">
+                        <a href="https://www.linkedin.com/in/harimisa-florent/" target="_blank">harimisa-florent</a>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <span class="contact-icon">🐙</span>
+                    <div class="contact-label">GitHub</div>
+                    <div class="contact-value">
+                        <a href="https://github.com/hf-hajanirina" target="_blank">hf-hajanirina</a>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <span class="contact-icon">📍</span>
+                    <div class="contact-label">Localisation</div>
+                    <div class="contact-value">
+                        Île-de-France, France<br>
+                        <span style="color: var(--accent-green);">Disponible en remote & sur site</span>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <span class="contact-icon">📄</span>
+                    <div class="contact-label">CV</div>
+                    <div class="contact-value">
+                        <a href="/cv-hajanirina-harimisa-florent.pdf" download>Télécharger le CV</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Harimisa Florent HAJANIRINA • Développé avec ❤️ et ☕</p>
+            <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 0.5rem;">
+                Built with passion using modern web technologies
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Navigation
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const sectionId = tab.getAttribute('data-section');
+                
+                // Update active tab
+                navTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Update active section
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === sectionId) {
+                        section.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Command Input
+        const commandInput = document.getElementById('commandInput');
+        const commands = {
+            'help': () => {
+                alert('Commandes disponibles:\n\n' +
+                      'about - Afficher la section À propos\n' +
+                      'skills - Afficher les compétences\n' +
+                      'projects - Afficher les projets\n' +
+                      'experience - Afficher les expériences\n' +
+                      'contact - Afficher les coordonnées\n' +
+                      'clear - Effacer le terminal\n' +
+                      'email - Ouvrir le client email');
+            },
+            'about': () => {
+                document.querySelector('[data-section="about"]').click();
+            },
+            'skills': () => {
+                document.querySelector('[data-section="skills"]').click();
+            },
+            'projects': () => {
+                document.querySelector('[data-section="projects"]').click();
+            },
+            'experience': () => {
+                document.querySelector('[data-section="experience"]').click();
+            },
+            'contact': () => {
+                document.querySelector('[data-section="contact"]').click();
+            },
+            'clear': () => {
+                commandInput.value = '';
+            },
+            'email': () => {
+                window.location.href = 'mailto:harimisaflorentmi@gmail.com';
+            }
+        };
+
+        commandInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const command = commandInput.value.trim().toLowerCase();
+                if (commands[command]) {
+                    commands[command]();
+                } else if (command) {
+                    alert(`Commande inconnue: "${command}"\nTapez "help" pour voir les commandes disponibles.`);
+                }
+                commandInput.value = '';
+            }
+        });
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            konamiCode = konamiCode.slice(-10);
+            
+            if (konamiCode.join(',') === konamiSequence.join(',')) {
+                document.body.style.animation = 'glitch 0.3s infinite';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                    alert('🎮 Konami Code activé! Vous avez débloqué le mode Matrix!');
+                }, 2000);
+            }
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.skill-category, .project-card, .experience-item, .contact-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
